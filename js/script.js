@@ -11,23 +11,24 @@ fetch('/getDefault').then(answer =>{
 
 function generateTableBody(table){
     let html = '';
-    let cell_order = ['t_name', 'h_name', 'd_name', 'patients', 'issued'];
+    let cell_order = [{key: 't_name', class: 'td__text'}, {key: 'h_name', class: 'td__text'},
+     {key: 'd_name', class: 'td__text'}, {key: 'patients', class: 'td__num'}, {key: 'issued', class: 'td__num'}];
     for (let item of table){
         let tendency = item.issued - item.patients;
-        let ten_class = '';
         html += '<tr'
         html += '>';
-        for (let key of cell_order){
-            html += '<td>' + item[key] + '</td>';
+        for (let order of cell_order){
+            html += '<td class="' + order.class + '">' + item[order.key] + '</td>';
         }
 
+        let ten_class = 'class="td__num';
         if (tendency > 0){
-            ten_class = ' class="positive"';
+            ten_class += ' positive';
         }
         else if (tendency < 0){
-            ten_class = ' class="negative"';
+            ten_class += ' negative';
         }
-        html += '<td' + ten_class + '>' + tendency + '</td></tr>';
+        html += '<td ' + ten_class + '">' + tendency + '</td></tr>';
     }
     return html;
 }

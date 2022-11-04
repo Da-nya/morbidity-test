@@ -12,8 +12,17 @@
 th{
     background-color: bisque;
 }
+table{
+    margin-top: 10px;
+}
 table, th, tr, td{
     border: 1px solid black;
     border-spacing: 0;
     border-collapse: collapse;
+}
+.td__text{
+    padding: 0 5px;
+}
+.td__num{
+    text-align: center;
 }
