@@ -9,6 +9,25 @@
     <title>Тестовое задание Morbidity</title>
 </head>
 <body>
+    <div class="wrapper">
+        <div>
+            <select id="fo_filter"></select>
+            <select id="month_filter"></select>
+            <input type="button" onclick="updateTable()" value='Обновить'/>
+        </div>
+        <table style="border-collapse:separate">
+            <thead>
+                <th>Субъект</th>
+                <th>Больница</th>
+                <th>Болезнь</th>
+                <th>Заболело чел.</th>
+                <th>Выздоровело чел.</th>
+                <th>Тенденция</th>
+            </thead>
+            <tbody id="t_body">
+            </tbody>
+        </table>
+    </div>
 </body>
     <script src="js/script.js"></script>
 </html>

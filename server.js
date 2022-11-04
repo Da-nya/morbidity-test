@@ -40,10 +40,23 @@ server.on('request', (request, response)=>{
                 const month = String(results[1][0].date).slice(4, 6);
                 filterDB(id, month).then(table => {
                     response.writeHead(200, {'Content-Type': 'application/json'});
-                    result = {fo: results[0], fo_id: id, month: month, table: table};
+                    let result = {fo: results[0], fo_id: id, month: month, table: table};
                     response.end(JSON.stringify(result));
                 });
             });
+            break;
+        case '/updTable':
+            data = '';
+            request.on("data", chunk => {
+                data += chunk;
+            });
+            request.on("end", () => {
+                data = JSON.parse(data);
+                filterDB(data.fo, data.month).then(result => {
+                    response.writeHead(200, {'Content-Type': 'application/json'});
+                    response.end(JSON.stringify(result))
+                });
+            })
             break;
         default:
             response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -98,13 +111,15 @@ async function getLastDate(){
     return await SQLquery('SELECT MAX(date) as date FROM statistics');
 }
 
+// получение отчета по параметрам
 async function filterDB(id_fo, month){
     month = String(month);
     if (month.length < 2){
         month = '0' + month;
     }
     let query = 'SELECT territory.name as t_name, hospital.name as h_name, disease.name as d_name, patients, issued from hospital JOIN statistics ON hospital_id = hospital.id JOIN disease ON disease.id = disease_id JOIN territory ON territory.id = terr_id';
-    query += ' WHERE territory.parent_id = ' + id_fo + ' AND date REGEXP \'[0123456789]{4}' + month + '[0123456789]{2}\'';
+    query += ' WHERE territory.parent_id = ' + id_fo + ' AND date REGEXP \'[0123456789]{4}' + month + '[0123456789]{2}\''; // регулярное выражение ГГГГММДД
+    query += ' ORDER BY territory.name, hospital.name';
     return SQLquery(query);
 }
 server.listen(8080, ()=>{console.log('Server works at localhost:8080')});
